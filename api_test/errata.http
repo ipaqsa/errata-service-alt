@@ -1,0 +1,17 @@
+GET http://localhost:9111/errata
+Content-Type: application/json
+
+{"Data": "ALT"}
+
+###
+POST http://localhost:9111/update
+Content-Type: application/json
+
+{"Data": "ALT-1000"}
+
+###
+GET http://localhost:9111/check
+Content-Type: application/json
+
+
+{"Data": "ALT-1000"}

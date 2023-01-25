@@ -1,0 +1,10 @@
+port: ":9111"
+database: "default"
+login: "default"
+password: ""
+#clickhouse_address: "127.0.0.1:18123" //localhost
+clickhouse_address: "clickhouse:8123"
+dialTimeout: 5
+HTTP: true
+#Enter gateway compose
+allowed: ["172.20.0.1"]
