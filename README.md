@@ -18,7 +18,7 @@ and writes to the database and then return to client,
 |   |-- db // pkg for database manipulation
 ```
 ## Config
-Example config file is located on ./config/config.yml
+Example config file is located in ./config/config.yml for local and in ./config/config-compose.yml
 
 Fields:
 - port - port where server will start 
@@ -52,6 +52,7 @@ P.S. if you want to change the config, call before docker-compose:
 ```
 make compose-rebuild-alt
 ```
+if you received access denied, check container console and add your compose gateway in config-compose.yml
 ## Test
 Use errata.http in ./api_test to test how it works
 
