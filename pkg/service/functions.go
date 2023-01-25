@@ -3,6 +3,7 @@ package service
 import (
 	"errataService/pkg/db"
 	"errors"
+	"strings"
 	"time"
 )
 
@@ -19,6 +20,7 @@ func (service *ServiceT) GenerateErrata(prefix string) (*db.Errata, error) {
 			return nil, errors.New("connection to the database failed")
 		}
 	}
+	prefix = strings.ToUpper(prefix)
 	return service.db.GenerateErrata(prefix)
 }
 

@@ -47,7 +47,10 @@ Use
 docker compose up
 ```
 Then create necessary table in clickhouse
-
+P.S. if you want to change the config, call before docker-compose: 
+```
+make compose-rebuild-alt
+```
 ## Test
 Use errata.http in ./api_test to test how it works
 
