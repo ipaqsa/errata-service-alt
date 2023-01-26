@@ -1,13 +1,16 @@
 package server
 
-import "errataService/pkg/db"
+import (
+	"time"
+)
 
-type RequestErrata struct {
-	Data string `json:"Data"`
+type Response struct {
+	Comment string          `json:"comment"`
+	Errata  *ResponseErrata `json:"errata"`
 }
 
 type ResponseErrata struct {
-	Status     int        `json:"status"`
-	StatusData string     `json:"statusData"`
-	Errata     *db.Errata `json:"errata"`
+	Errata  string    `json:"id"`
+	Created time.Time `json:"created"`
+	Updated time.Time `json:"updated"`
 }

@@ -18,7 +18,7 @@ and writes to the database and then return to client,
 |   |-- db // pkg for database manipulation
 ```
 ## Config
-Example config file is located on ./config/config.yml
+Example config file is located on ./config/config.yml.example
 
 Fields:
 - port - port where server will start 
@@ -41,15 +41,14 @@ Then correct config file and run service
 ```
 ./build/service -c config/config.yml
 ```
-### Compose
+### Docker
 Use
 ```
-docker compose up
+docker build . -t erratamanager
 ```
-Then create necessary table in clickhouse
-P.S. if you want to change the config, call before docker-compose: 
+Then 
 ```
-make compose-rebuild-alt
+docker run -v $PWD/config.yml:/etc/alt-erratamanager erratamanager
 ```
 ## Test
 Use errata.http in ./api_test to test how it works
@@ -58,14 +57,11 @@ Use errata.http in ./api_test to test how it works
 This response comes from the server to the request
 ```
 {
-"status": int //if succes 1, else -1
-"statusData":string //if status != 0, statusData != ""
+"comment": string
 "errata": {
-     "prefix":string 
-     "num":int64
-     "updateCount":int64
-     "creationDate":time.Time
-     "changeDate":time.Time
+     "id": string
+     "created":time.Time
+     "changed":time.Time
     }
 }
 ```
