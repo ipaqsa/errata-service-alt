@@ -46,10 +46,11 @@ Use
 ```
 docker build . -t erratamanager
 ```
-Then 
+Then
 ```
 docker run -v $PWD/config.yml:/etc/alt-erratamanager erratamanager
 ```
+if you received access denied, check container console and add your compose gateway in config-compose.yml
 ## Test
 Use errata.http in ./api_test to test how it works
 
