@@ -22,7 +22,7 @@ func errataHandler(w http.ResponseWriter, r *http.Request) {
 		errata, s, err := service.Service.GenerateErrata(prefix)
 		if err != nil {
 			errorLogger.Printf(err.Error())
-			err = sendAnswer(w, s, err.Error(), nil)
+			err = sendAnswer(w, s, "generate error", nil)
 			if err != nil {
 				errorLogger.Printf(err.Error())
 			}
@@ -31,6 +31,12 @@ func errataHandler(w http.ResponseWriter, r *http.Request) {
 		err = sendAnswer(w, s, "OK", errata)
 		if err != nil {
 			errorLogger.Printf(err.Error())
+			return
+		}
+	} else {
+		err := sendAnswer(w, http.StatusMethodNotAllowed, "", nil)
+		if err != nil {
+			errorLogger.Println(err.Error())
 			return
 		}
 	}
@@ -56,7 +62,7 @@ func updateHandler(w http.ResponseWriter, r *http.Request) {
 			if err.Error() == "sql: no rows in result set" {
 				err = sendAnswer(w, http.StatusNotFound, "not found", nil)
 			} else {
-				err = sendAnswer(w, s, err.Error(), nil)
+				err = sendAnswer(w, s, "update error", nil)
 			}
 			if err != nil {
 				errorLogger.Printf(err.Error())
@@ -66,6 +72,12 @@ func updateHandler(w http.ResponseWriter, r *http.Request) {
 		err = sendAnswer(w, s, "OK", errata)
 		if err != nil {
 			errorLogger.Printf(err.Error())
+			return
+		}
+	} else {
+		err := sendAnswer(w, http.StatusMethodNotAllowed, "", nil)
+		if err != nil {
+			errorLogger.Println(err.Error())
 			return
 		}
 	}
@@ -91,7 +103,7 @@ func checkHandler(w http.ResponseWriter, r *http.Request) {
 			if err.Error() == "sql: no rows in result set" {
 				err = sendAnswer(w, http.StatusNotFound, "not found", nil)
 			} else {
-				err = sendAnswer(w, s, err.Error(), nil)
+				err = sendAnswer(w, s, "check error", nil)
 			}
 			if err != nil {
 				errorLogger.Printf(err.Error())
@@ -101,6 +113,12 @@ func checkHandler(w http.ResponseWriter, r *http.Request) {
 		err = sendAnswer(w, s, "OK", errata)
 		if err != nil {
 			errorLogger.Printf(err.Error())
+			return
+		}
+	} else {
+		err := sendAnswer(w, http.StatusMethodNotAllowed, "", nil)
+		if err != nil {
+			errorLogger.Println(err.Error())
 			return
 		}
 	}

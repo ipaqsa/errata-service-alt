@@ -1,4 +1,4 @@
-create table default.errata
+create table if not exists default.errata
 (
     errata_id            String,
     errata_prefix        String,
