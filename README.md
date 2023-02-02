@@ -7,6 +7,12 @@ The project is a service for creating and updating errata for ALT Linux. It prov
 and writes to the database and then return to client, 
 - Update errata - this method allows you to update the number of errata updates by the errata number, 
 - Check errata - this method checks for errata
+
+## API ENDPOINT
+- GET /register?prefix=PREFIX
+- POST /update?name=NAME
+- GET /check?name=NAME
+
 ## Project structure
 ```
 |-- cmd // folder with entry point(main.go)
@@ -18,7 +24,7 @@ and writes to the database and then return to client,
 |   |-- db // pkg for database manipulation
 ```
 ## Config
-Example config file is located on ./config/config.yml.example
+Example config file is located on ./config/config.yml.example, change it and rename to config.yml
 
 Fields:
 - database - clickhouse database name
@@ -30,11 +36,11 @@ Fields:
 - allowed - allowed address
 
 ## Install
-Along the path ./ there is sql file with table that must be in clickhouse for the service to work correctly
+Along the path ./config/errata.sql there is sql file with table that must be in clickhouse for the service to work correctly
 ### Local
 Use 
 ```
-go build cmd/main.go
+go build -o build/service cmd/main.go
 ```
 Then correct config file and run service 
 ```
