@@ -6,6 +6,8 @@ import (
 	"os"
 )
 
+const port = "9111"
+
 func init() {
 	err := configurator.FlagInit()
 	if err != nil {
@@ -18,7 +20,8 @@ func init() {
 }
 
 func main() {
-	err := server.Run()
+	println("Hello!")
+	err := server.Run(port)
 	if err != nil {
 		println(err.Error())
 		return

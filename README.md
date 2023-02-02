@@ -21,7 +21,6 @@ and writes to the database and then return to client,
 Example config file is located on ./config/config.yml.example
 
 Fields:
-- port - port where server will start 
 - database - clickhouse database name
 - login - clickhouse database login
 - password - clickhouse database password
@@ -35,22 +34,20 @@ Along the path ./ there is sql file with table that must be in clickhouse for th
 ### Local
 Use 
 ```
-make service-build
+go build cmd/main.go
 ```
 Then correct config file and run service 
 ```
 ./build/service -c config/config.yml
 ```
-### Docker
+### Docker-Compose
 Use
 ```
-docker build . -t erratamanager
+docker-compose up 
 ```
-Then
-```
-docker run -v $PWD/config.yml:/etc/alt-erratamanager erratamanager
-```
-if you received access denied, check container console and add your compose gateway in config-compose.yml
+
+if you received access denied, check container console and add your compose gateway in config/config.yml
+
 ## Test
 Use errata.http in ./api_test to test how it works
 
@@ -61,8 +58,8 @@ This response comes from the server to the request
 "comment": string
 "errata": {
      "id": string
-     "created":time.Time
-     "changed":time.Time
+     "created":string
+     "changed":string
     }
 }
 ```

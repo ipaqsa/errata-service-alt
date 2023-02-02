@@ -52,7 +52,7 @@ func (db *DB) GetErrata(errata_id string) (*Errata, int, error) {
 	db.mtx.Lock()
 	defer db.mtx.Unlock()
 	var errata Errata
-	row := db.db.QueryRow("SELECT * FROM errata WHERE errata_id = $1", errata_id)
+	row := db.db.QueryRow("SELECT * FROM errata WHERE errataID = $1", errata_id)
 	if err := row.Scan(&errata.id, &errata.Prefix, &errata.Num, &errata.UpdateCount, &errata.CreationDate, &errata.ChangeDate); err != nil {
 		return nil, http.StatusNotFound, err
 	}
@@ -63,7 +63,7 @@ func (db *DB) UpdateErrata(errata_id string, update int64) (*Errata, int, error)
 	db.mtx.Lock()
 	defer db.mtx.Unlock()
 	var errata Errata
-	row := db.db.QueryRow("SELECT * FROM errata WHERE errata_id = $1 AND errata_update_count = (SELECT max(errata_update_count) FROM errata WHERE errata_id= $1)", errata_id)
+	row := db.db.QueryRow("SELECT * FROM errata WHERE errataID = $1 AND errataUpdateCount = (SELECT max(errataUpdateCount) FROM errata WHERE errataID= $1)", errata_id)
 	if err := row.Scan(&errata.id, &errata.Prefix, &errata.Num, &errata.UpdateCount, &errata.CreationDate, &errata.ChangeDate); err != nil {
 		return nil, http.StatusNotFound, err
 	}
@@ -86,7 +86,7 @@ func (db *DB) GenerateErrata(prefix string) (*Errata, int, error) {
 	defer db.mtx.Unlock()
 	var last int64
 	var current int64
-	row := db.db.QueryRow("SELECT max(errata_num) FROM errata")
+	row := db.db.QueryRow("SELECT max(errataNum) FROM errata")
 	if err := row.Scan(&last); err != nil {
 		return nil, http.StatusNotFound, err
 	}
