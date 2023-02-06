@@ -1,6 +1,7 @@
 package server
 
 import (
+	"errataService/pkg/configurator"
 	"errataService/pkg/logger"
 	"errataService/pkg/service"
 	"net/http"
@@ -9,7 +10,7 @@ import (
 var infoLogger = logger.NewLogger("INFO")
 var errorLogger = logger.NewLogger("ERROR")
 
-func Run(port string) error {
+func Run() error {
 	err := service.CreateService()
 	if err != nil {
 		return err
@@ -20,8 +21,8 @@ func Run(port string) error {
 	http.HandleFunc("/update", updateHandler)
 	http.HandleFunc("/check", checkHandler)
 
-	infoLogger.Printf("Service start at %s", port)
-	err = http.ListenAndServe(port, nil)
+	infoLogger.Printf("Service start at %s", configurator.Port)
+	err = http.ListenAndServe(configurator.Port, nil)
 	if err != nil {
 		return err
 	}
