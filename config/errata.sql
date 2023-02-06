@@ -1,11 +1,10 @@
-create table if not exists errata
+create table if not exists ErrataID
 (
-    errataID            String,
-    errataPrefix        String,
-    errataNum           Int64,
-    errataUpdateCount  Int32,
-    errataCreationDate DateTime,
-    errataChangeDate   DateTime
-)
-    engine = MergeTree ORDER BY errataPrefix
+    errata_id            String,
+    errata_prefix        String,
+    errata_num           Int64,
+    errata_update_count  Int32,
+    errate_creation_date DateTime,
+    errata_change_date   DateTime
+) engine = MergeTree ORDER BY errata_prefix
         SETTINGS index_granularity = 2;
