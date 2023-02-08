@@ -6,6 +6,7 @@ import (
 	"errataService/pkg/db"
 	"errataService/pkg/utils"
 	"errors"
+	"net"
 	"net/http"
 	"regexp"
 	"strings"
@@ -78,7 +79,8 @@ func sendAnswer(w http.ResponseWriter, status int, Comment string, errata *db.Er
 func accessAddress(w http.ResponseWriter, r *http.Request) bool {
 	addr := getAddress(r)
 	splits := strings.Split(addr, ":")
-	if len(splits) != 2 || !utils.Contains(configurator.Config.Allowed, splits[0]) {
+	nets := getNetworks(configurator.Config.Allowed)
+	if len(splits) != 2 || !utils.Contains(configurator.Config.Allowed, splits[0]) && !inNetworks(nets, addr) {
 		errorLogger.Printf("Dont allowed host: %s", splits[0])
 		err := sendAnswer(w, http.StatusForbidden, "Access denied", nil)
 		if err != nil {
@@ -103,4 +105,25 @@ func getAddress(r *http.Request) string {
 	} else {
 		return r.RemoteAddr
 	}
+}
+
+func getNetworks(allowed []string) []*net.IPNet {
+	var data []*net.IPNet
+	for _, allow := range allowed {
+		_, ntw, err := net.ParseCIDR(allow)
+		if err != nil {
+			continue
+		}
+		data = append(data, ntw)
+	}
+	return data
+}
+
+func inNetworks(networks []*net.IPNet, addr string) bool {
+	for _, ntw := range networks {
+		if ntw.Contains(net.ParseIP(addr)) {
+			return true
+		}
+	}
+	return false
 }
