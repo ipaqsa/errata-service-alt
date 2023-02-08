@@ -1,9 +1,0 @@
-port: ":9111"
-database: "default"
-login: "default"
-password: ""
-clickhouse_address: "127.0.0.1:18123"
-dialTimeout: 5
-HTTP: true
-allowed: ["127.0.0.1"]
-

@@ -1,7 +1,8 @@
 package configurator
 
+const Port = ":9111"
+
 type ConfigT struct {
-	Port           string   `yaml:"port"`
 	DataBase       string   `yaml:"database"`
 	Login          string   `yaml:"login"`
 	Password       string   `yaml:"password"`

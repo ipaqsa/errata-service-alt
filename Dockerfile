@@ -1,16 +1,10 @@
-FROM golang:latest as build
-
-COPY . /src
-WORKDIR /src
-
-RUN CGO_ENABLED=0 GOOS=linux go build -mod vendor -o service ./cmd/main.go
-
 FROM registry.altlinux.org/alt/alt
 
+RUN apt-get update && apt-get install -y golang && rm -f /var/cache/apt/archives/*.rpm /var/cache/apt/*.bin /var/lib/apt/lists/*.*
+
 WORKDIR /service
-COPY --from=build /src/service .
-COPY ./config/config-compose.yml ./config.yml
+COPY . .
+RUN touch ./config.yml
+RUN go build -mod vendor -o service ./cmd/main.go
 
-EXPOSE 9111
-
-ENTRYPOINT ["./service", "-c", "config.yml"]
+ENTRYPOINT ["./service", "-c", "./config.yml"]

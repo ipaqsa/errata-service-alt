@@ -3,7 +3,9 @@ package db
 import (
 	"errataService/pkg/configurator"
 	"errataService/pkg/utils"
+	"errors"
 	"github.com/ClickHouse/clickhouse-go/v2"
+	"net/http"
 	"strconv"
 	"time"
 )
@@ -46,56 +48,61 @@ func (db *DB) CheckConnect() bool {
 	return false
 }
 
-func (db *DB) GetErrata(errata_id string) (*Errata, error) {
+func (db *DB) GetErrata(errata_id string) (*Errata, int, error) {
 	db.mtx.Lock()
 	defer db.mtx.Unlock()
 	var errata Errata
-	row := db.db.QueryRow("SELECT * FROM errata WHERE errata_id = $1", errata_id)
+	row := db.db.QueryRow("SELECT * FROM ErrataID WHERE errata_id = $1", errata_id)
 	if err := row.Scan(&errata.id, &errata.Prefix, &errata.Num, &errata.UpdateCount, &errata.CreationDate, &errata.ChangeDate); err != nil {
-		return nil, err
+		return nil, http.StatusNotFound, err
 	}
-	return &errata, nil
+	return &errata, http.StatusOK, nil
 }
 
-func (db *DB) UpdateErrata(errata_id string) (*Errata, error) {
+func (db *DB) UpdateErrata(errata_id string, update int64) (*Errata, int, error) {
 	db.mtx.Lock()
 	defer db.mtx.Unlock()
 	var errata Errata
-	row := db.db.QueryRow("SELECT * FROM errata WHERE errata_id = $1", errata_id)
+	row := db.db.QueryRow("SELECT * FROM ErrataID WHERE errata_id = $1 AND errata_update_count = (SELECT max(errata_update_count) FROM ErrataID WHERE errata_id= $1)", errata_id)
 	if err := row.Scan(&errata.id, &errata.Prefix, &errata.Num, &errata.UpdateCount, &errata.CreationDate, &errata.ChangeDate); err != nil {
-		return nil, err
+		return nil, http.StatusNotFound, err
+	}
+	if errata.UpdateCount != update {
+		return nil, http.StatusNotFound, errors.New("version don`t match")
 	}
 	errata.UpdateCount += 1
 	errata.ChangeDate = time.Now()
-	_, err := db.db.Exec("ALTER TABLE errata UPDATE errata_update_count=$1, errata_change_date=$2 where errata_id = $3", errata.UpdateCount, errata.CreationDate, errata_id)
+	_, err := db.db.Exec("INSERT INTO ErrataID VALUES ($1, $2, $3, $4, $5, $6)",
+		errata.id, errata.Prefix, errata.Num, errata.UpdateCount,
+		errata.CreationDate, errata.ChangeDate)
 	if err != nil {
-		return nil, err
+		return nil, http.StatusInternalServerError, err
 	}
-	return &errata, nil
+	return &errata, http.StatusOK, nil
 }
 
-func (db *DB) GenerateErrata(prefix string) (*Errata, error) {
+func (db *DB) GenerateErrata(prefix string) (*Errata, int, error) {
 	db.mtx.Lock()
 	defer db.mtx.Unlock()
 	var last int64
 	var current int64
-	row := db.db.QueryRow("SELECT max(errata_num) FROM errata")
+	row := db.db.QueryRow("SELECT max(errata_num) FROM ErrataID")
 	if err := row.Scan(&last); err != nil {
-		return nil, err
+		return nil, http.StatusNotFound, err
 	}
 	if last < 999 {
 		last = 999
 	}
 	current = last + 1
 	id := utils.SHA1(prefix + "-" + strconv.Itoa(int(current)))
-	errata := CreateErrata(id, prefix, current, 0, time.Now(), time.Now())
-	_, err := db.db.Exec("INSERT INTO errata VALUES ($1, $2, $3, $4, $5, $6)",
+	errata := CreateErrata(id, prefix, current, 1, time.Now(), time.Now())
+	_, err := db.db.Exec("INSERT INTO ErrataID VALUES ($1, $2, $3, $4, $5, $6)",
 		errata.id, errata.Prefix, errata.Num, errata.UpdateCount,
 		errata.CreationDate, errata.ChangeDate)
 	if err != nil {
-		return nil, err
+		return nil, http.StatusInternalServerError, err
 	}
-	return errata, nil
+	return errata, http.StatusOK, nil
 }
 
 func (db *DB) Close() {

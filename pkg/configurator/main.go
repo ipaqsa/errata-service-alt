@@ -22,7 +22,7 @@ func InitInfo() {
 		Info.Address = "internal network is not available"
 	} else {
 		Info.Address = taddr.String()
-		Info.Address += Config.Port
+		Info.Address += Port
 	}
 }
 

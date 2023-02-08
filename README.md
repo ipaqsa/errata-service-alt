@@ -7,6 +7,12 @@ The project is a service for creating and updating errata for ALT Linux. It prov
 and writes to the database and then return to client, 
 - Update errata - this method allows you to update the number of errata updates by the errata number, 
 - Check errata - this method checks for errata
+
+## API ENDPOINT
+- GET /register?prefix=PREFIX
+- POST /update?name=NAME
+- GET /check?name=NAME
+
 ## Project structure
 ```
 |-- cmd // folder with entry point(main.go)
@@ -18,10 +24,9 @@ and writes to the database and then return to client,
 |   |-- db // pkg for database manipulation
 ```
 ## Config
-Example config file is located in ./config/config.yml for local and in ./config/config-compose.yml
+Example config file is located on ./config/config.yml.example, change it and rename to config.yml
 
 Fields:
-- port - port where server will start 
 - database - clickhouse database name
 - login - clickhouse database login
 - password - clickhouse database password
@@ -31,28 +36,24 @@ Fields:
 - allowed - allowed address
 
 ## Install
-Along the path ./ there is sql file with table that must be in clickhouse for the service to work correctly
+Along the path ./config/errata.sql there is sql file with table that must be in clickhouse for the service to work correctly
 ### Local
 Use 
 ```
-make service-build
+go build -o build/service cmd/main.go
 ```
 Then correct config file and run service 
 ```
 ./build/service -c config/config.yml
 ```
-### Compose
+### Docker-Compose
 Use
 ```
-docker compose up
+docker-compose up 
 ```
-Then create necessary table in clickhouse
 
-P.S. if you want to change the config, call before docker-compose: 
-```
-make compose-rebuild-alt
-```
-if you received access denied, check container console and add your compose gateway in config-compose.yml
+if you received access denied, check container console and add your compose gateway in config/config.yml
+
 ## Test
 Use errata.http in ./api_test to test how it works
 
@@ -60,14 +61,11 @@ Use errata.http in ./api_test to test how it works
 This response comes from the server to the request
 ```
 {
-"status": int //if succes 1, else -1
-"statusData":string //if status != 0, statusData != ""
+"comment": string
 "errata": {
-     "prefix":string 
-     "num":int64
-     "updateCount":int64
-     "creationDate":time.Time
-     "changeDate":time.Time
+     "id": string
+     "created":string
+     "changed":string
     }
 }
 ```

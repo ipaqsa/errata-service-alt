@@ -1,17 +1,25 @@
-GET http://localhost:9111/errata
-Content-Type: application/json
-
-{"Data": "ALT"}
+GET http://localhost:9111/register?prefix=ALT-SA
 
 ###
-POST http://localhost:9111/update
-Content-Type: application/json
-
-{"Data": "ALT-1000"}
+GET http://localhost:9111/register?prefix=ALT-SA-
 
 ###
-GET http://localhost:9111/check
-Content-Type: application/json
+GET http://localhost:9111/register?prefix=ALT-SA-1
 
+###
+GET http://localhost:9111/register?prefix=SA
 
-{"Data": "ALT-1000"}
+###
+GET http://localhost:9111/register?prefix=""
+
+###
+GET http://localhost:9111/register?prefix=
+
+###
+POST http://localhost:9111/update?name=ALT-SA-1011-1
+
+###
+GET http://localhost:9111/update?name=ALT-SA-1011-1
+
+###
+GET http://localhost:9111/check?name=ALT-SA-1021-1

@@ -17,12 +17,12 @@ func Run() error {
 	}
 	defer service.Service.CloseConnect()
 
-	http.HandleFunc("/errata", errataHandler)
+	http.HandleFunc("/register", errataHandler)
 	http.HandleFunc("/update", updateHandler)
 	http.HandleFunc("/check", checkHandler)
 
-	infoLogger.Printf("Service start at %s", configurator.Config.Port)
-	err = http.ListenAndServe(configurator.Config.Port, nil)
+	infoLogger.Printf("Service start at %s", configurator.Port)
+	err = http.ListenAndServe(configurator.Port, nil)
 	if err != nil {
 		return err
 	}
