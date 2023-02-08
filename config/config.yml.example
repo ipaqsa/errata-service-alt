@@ -5,4 +5,3 @@ clickhouse_address: "clickhouse:9000"
 dialTimeout: 5
 HTTP: false
 allowed: ["10.1.2.3","10.22.33.0/24","172.18.0.0/28"]
-

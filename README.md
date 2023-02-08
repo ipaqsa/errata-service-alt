@@ -13,6 +13,8 @@ and writes to the database and then return to client,
 - POST /update?name=NAME
 - GET /check?name=NAME
 
+Possible responses: 200(ok), 405(use not allowed method), 400(request parse error), 500(connect to clickhouse fail), 404(db error)
+
 ## Project structure
 ```
 |-- cmd // folder with entry point(main.go)
