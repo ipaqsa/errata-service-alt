@@ -49,8 +49,8 @@ func sendAnswer(w http.ResponseWriter, status int, Comment string, errata *db.Er
 	if errata != nil {
 		respErrata = ResponseErrata{
 			Errata:  db.ErrataToString(errata),
-			Created: errata.CreationDate.String(),
-			Updated: errata.ChangeDate.String(),
+			Created: errata.CreationDate.Format("2006-01-02T15:04:05.000-07:00"),
+			Updated: errata.ChangeDate.Format("2006-01-02T15:04:05.000-07:00"),
 		}
 	}
 	if errata == nil {

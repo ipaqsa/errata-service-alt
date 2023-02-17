@@ -52,7 +52,7 @@ func (db *DB) GetErrata(errata_id string) (*Errata, int, error) {
 	db.mtx.Lock()
 	defer db.mtx.Unlock()
 	var errata Errata
-	row := db.db.QueryRow("SELECT * FROM ErrataID WHERE errata_id = $1", errata_id)
+	row := db.db.QueryRow("SELECT * FROM ErrataID WHERE errata_id = $1 AND errata_update_count = (SELECT max(errata_update_count) FROM ErrataID WHERE errata_id= $1)", errata_id)
 	if err := row.Scan(&errata.id, &errata.Prefix, &errata.Num, &errata.UpdateCount, &errata.CreationDate, &errata.ChangeDate); err != nil {
 		return nil, http.StatusNotFound, err
 	}
