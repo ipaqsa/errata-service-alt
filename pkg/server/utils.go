@@ -80,7 +80,7 @@ func accessAddress(w http.ResponseWriter, r *http.Request) bool {
 	addr := getAddress(r)
 	splits := strings.Split(addr, ":")
 	nets := getNetworks(configurator.Config.Allowed)
-	if len(splits) != 2 || !utils.Contains(configurator.Config.Allowed, splits[0]) && !inNetworks(nets, addr) {
+	if len(splits) != 2 || !(utils.Contains(configurator.Config.Allowed, splits[0]) || inNetworks(nets, splits[0])) {
 		errorLogger.Printf("Dont allowed host: %s", splits[0])
 		err := sendAnswer(w, http.StatusForbidden, "Access denied", nil)
 		if err != nil {
