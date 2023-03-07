@@ -10,7 +10,7 @@ func registerHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if r.Method == http.MethodGet {
-		prefix, s, err := parseQuery(r)
+		prefix, year, s, err := parseRegisterQuery(r)
 		if err != nil {
 			errorLogger.Printf(err.Error())
 			err = sendAnswer(w, s, "wrong request", nil)
@@ -19,7 +19,7 @@ func registerHandler(w http.ResponseWriter, r *http.Request) {
 			}
 			return
 		}
-		errata, s, err := service.Service.GenerateErrata(prefix)
+		errata, s, err := service.Service.GenerateErrata(prefix, year)
 		if err != nil {
 			errorLogger.Printf(err.Error())
 			err = sendAnswer(w, s, "generate error", nil)

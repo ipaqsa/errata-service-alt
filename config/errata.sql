@@ -2,6 +2,7 @@ create table if not exists ErrataID
 (
     errata_id            String,
     errata_prefix        String,
+    errata_year          String,
     errata_num           Int64,
     errata_update_count  Int32,
     errate_creation_date DateTime,

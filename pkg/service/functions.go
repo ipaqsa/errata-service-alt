@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func (service *ServiceT) GenerateErrata(prefix string) (*db.Errata, int, error) {
+func (service *ServiceT) GenerateErrata(prefix, year string) (*db.Errata, int, error) {
 	status := service.db.CheckConnect()
 	if !status {
 		time.Sleep(time.Second)
@@ -20,7 +20,7 @@ func (service *ServiceT) GenerateErrata(prefix string) (*db.Errata, int, error) 
 			return nil, http.StatusInternalServerError, errors.New("connection to the database failed")
 		}
 	}
-	return service.db.GenerateErrata(prefix)
+	return service.db.GenerateErrata(prefix, year)
 }
 
 func (service *ServiceT) GetErrata(errata string) (*db.Errata, int, error) {

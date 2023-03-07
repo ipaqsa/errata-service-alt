@@ -1,10 +1,10 @@
-GET http://localhost:9111/register?prefix=ALT-XX
+GET http://localhost:9111/register?prefix=ALT-1999&year=2000
 
 ###
-GET http://localhost:9111/register?prefix=ALT-SA-
+GET http://localhost:9111/register?prefix=ALT&year=2012
 
 ###
-GET http://localhost:9111/register?prefix=ALT-SA-1
+GET http://localhost:9111/register?prefix=ALT-SA
 
 ###
 GET http://localhost:9111/register?prefix=SA
@@ -16,10 +16,10 @@ GET http://localhost:9111/register?prefix=""
 GET http://localhost:9111/register?prefix=
 
 ###
-POST http://localhost:9111/update?name=ALT-XX-1002-3
+POST http://localhost:9111/update?name=ALT-1999-2000-1000-2
 
 ###
 GET http://localhost:9111/update?name=ALT-XX-1002-1
 
 ###
-GET http://localhost:9111/check?name=ALT-XX-1002-1
+GET http://localhost:9111/check?name=ALT-XX-1000-2

@@ -14,6 +14,7 @@ type DB struct {
 type Errata struct {
 	id           string
 	Prefix       string    `json:"prefix"`
+	Year         string    `json:"year"`
 	Num          int64     `json:"num"`
 	UpdateCount  int64     `json:"updateCount"`
 	CreationDate time.Time `json:"creationDate"`

@@ -12,7 +12,7 @@ func init() {
 		println(err.Error())
 		os.Exit(-1)
 	}
-	configurator.SetVersion("1.0.2")
+	configurator.SetVersion("1.0.3")
 	configurator.InitInfo()
 	configurator.PrintInfo()
 }

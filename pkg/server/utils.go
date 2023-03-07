@@ -19,6 +19,9 @@ func valid(data string, vtype string) (string, bool) {
 	} else if vtype == "name" {
 		matched, _ := regexp.MatchString("^[A-Z]+[\\-0-9A-Z]+-[\\d]{4,}-[\\d]{1,}$", data)
 		return data, matched
+	} else if vtype == "year" {
+		matched, _ := regexp.MatchString("^[2][0-9]{3}$", data)
+		return data, matched
 	}
 	return "", false
 }
@@ -34,6 +37,30 @@ func parseQuery(r *http.Request) (string, int, error) {
 		return "", http.StatusBadRequest, errors.New("wrong format")
 	}
 	return data, http.StatusOK, nil
+}
+
+func parseRegisterQuery(r *http.Request) (string, string, int, error) {
+	q := r.URL.RawQuery
+	splits := strings.Split(q, "&")
+	if len(splits) != 2 {
+		return "", "", http.StatusBadRequest, errors.New("wrong format")
+	}
+	prefixSplits := strings.Split(splits[0], "=")
+	if len(prefixSplits) != 2 {
+		return "", "", http.StatusBadRequest, errors.New("wrong format")
+	}
+	prefix, status := valid(prefixSplits[1], prefixSplits[0])
+	if !status {
+		return "", "", http.StatusBadRequest, errors.New("wrong format")
+	}
+
+	yearSplits := strings.Split(splits[1], "=")
+	year, status := valid(yearSplits[1], yearSplits[0])
+	if !status {
+		return "", "", http.StatusBadRequest, errors.New("wrong format")
+	}
+
+	return prefix, year, http.StatusOK, nil
 }
 
 func marshalResponse(response *Response) ([]byte, error) {
