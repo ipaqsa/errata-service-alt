@@ -9,7 +9,7 @@ and writes to the database and then return to client,
 - Check errata - this method checks for errata
 
 ## API ENDPOINT
-- GET /register?prefix=PREFIX
+- GET /register?prefix=PREFIX&year=YEAR
 - POST /update?name=NAME
 - GET /check?name=NAME
 
