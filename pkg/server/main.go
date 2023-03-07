@@ -17,7 +17,7 @@ func Run() error {
 	}
 	defer service.Service.CloseConnect()
 
-	http.HandleFunc("/register", errataHandler)
+	http.HandleFunc("/register", registerHandler)
 	http.HandleFunc("/update", updateHandler)
 	http.HandleFunc("/check", checkHandler)
 

@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-func errataHandler(w http.ResponseWriter, r *http.Request) {
+func registerHandler(w http.ResponseWriter, r *http.Request) {
 	if !accessAddress(w, r) {
 		return
 	}
