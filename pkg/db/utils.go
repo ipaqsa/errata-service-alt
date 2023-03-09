@@ -32,11 +32,11 @@ func PrintErrata(errata *Errata) {
 func ErrataToID(errata string) (string, int64, error) {
 	splits := strings.Split(errata, "-")
 	if len(splits) < 3 {
-		return "", 0, errors.New("wrong format, need: PREFIX-NUM-YEAR-UPDATE")
+		return "", 0, errors.New("wrong format, need: PREFIX-YEAR-NUM-UPDATE")
 	}
 	update, err := strconv.ParseInt(splits[len(splits)-1], 10, 64)
 	if err != nil {
-		return "", 0, errors.New("wrong format, need: PREFIX-NUM-YEAR-UPDATE")
+		return "", 0, errors.New("wrong format, need: PREFIX-YEAR-NUM-UPDATE")
 	}
 	if update == 0 {
 		return "", 0, errors.New("updated count cannot be equal to 0")
