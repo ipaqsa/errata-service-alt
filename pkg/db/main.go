@@ -59,7 +59,7 @@ func (db *DB) GetErrata(errata_id string) (*Errata, int, error) {
 	return &errata, http.StatusOK, nil
 }
 
-func (db *DB) UpdateErrata(errata_id string, update int64) (*Errata, int, error) {
+func (db *DB) UpdateErrata(errata_id string, update uint32) (*Errata, int, error) {
 	db.mtx.Lock()
 	defer db.mtx.Unlock()
 	var errata Errata
@@ -81,11 +81,11 @@ func (db *DB) UpdateErrata(errata_id string, update int64) (*Errata, int, error)
 	return &errata, http.StatusOK, nil
 }
 
-func (db *DB) GenerateErrata(prefix, year string) (*Errata, int, error) {
+func (db *DB) GenerateErrata(prefix string, year uint32) (*Errata, int, error) {
 	db.mtx.Lock()
 	defer db.mtx.Unlock()
-	var last int64
-	var current int64
+	var last uint32
+	var current uint32
 	row := db.db.QueryRow("SELECT max(errata_num) FROM ErrataID WHERE errata_year = $1", year)
 	if err := row.Scan(&last); err != nil {
 		return nil, http.StatusNotFound, err
@@ -94,7 +94,7 @@ func (db *DB) GenerateErrata(prefix, year string) (*Errata, int, error) {
 		last = 999
 	}
 	current = last + 1
-	id := utils.SHA1(prefix + "-" + year + "-" + strconv.Itoa(int(current)))
+	id := utils.SHA1(prefix + "-" + strconv.FormatUint(uint64(year), 10) + "-" + strconv.FormatUint(uint64(current), 10))
 	errata := CreateErrata(id, prefix, year, current, 1, time.Now(), time.Now())
 	_, err := db.db.Exec("INSERT INTO ErrataID VALUES ($1, $2, $3, $4, $5, $6, $7)",
 		errata.id, errata.Prefix, errata.Year, errata.Num, errata.UpdateCount,
