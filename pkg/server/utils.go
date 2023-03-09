@@ -9,6 +9,7 @@ import (
 	"net"
 	"net/http"
 	"regexp"
+	"strconv"
 	"strings"
 )
 
@@ -39,28 +40,52 @@ func parseQuery(r *http.Request) (string, int, error) {
 	return data, http.StatusOK, nil
 }
 
-func parseRegisterQuery(r *http.Request) (string, string, int, error) {
+func parseRegisterQuery(r *http.Request) (*RegisterQuery, int, error) {
 	q := r.URL.RawQuery
 	splits := strings.Split(q, "&")
 	if len(splits) != 2 {
-		return "", "", http.StatusBadRequest, errors.New("wrong format")
+		errorLogger.Printf("request invalid")
+		return nil, http.StatusBadRequest, errors.New("wrong format")
 	}
+	var rq RegisterQuery
 	prefixSplits := strings.Split(splits[0], "=")
 	if len(prefixSplits) != 2 {
-		return "", "", http.StatusBadRequest, errors.New("wrong format")
+		errorLogger.Printf("request invalid")
+		return nil, http.StatusBadRequest, errors.New("wrong format")
 	}
 	prefix, status := valid(prefixSplits[1], prefixSplits[0])
 	if !status {
-		return "", "", http.StatusBadRequest, errors.New("wrong format")
+		errorLogger.Printf("%s invalid", prefixSplits[0])
+		return nil, http.StatusBadRequest, errors.New("wrong format")
 	}
-
+	if prefixSplits[0] == "prefix" {
+		rq.Prefix = prefix
+	} else {
+		yearUint, err := strconv.ParseUint(prefix, 10, 32)
+		if err != nil {
+			errorLogger.Printf("year parse error")
+			return nil, http.StatusBadRequest, errors.New("wrong format")
+		}
+		rq.Year = uint32(yearUint)
+	}
 	yearSplits := strings.Split(splits[1], "=")
 	year, status := valid(yearSplits[1], yearSplits[0])
 	if !status {
-		return "", "", http.StatusBadRequest, errors.New("wrong format")
+		errorLogger.Printf("%s invalid", yearSplits[0])
+		return nil, http.StatusBadRequest, errors.New("wrong format")
+	}
+	if yearSplits[0] == "year" {
+		yearUint, err := strconv.ParseUint(year, 10, 32)
+		if err != nil {
+			errorLogger.Printf("year parse error")
+			return nil, http.StatusBadRequest, errors.New("wrong format")
+		}
+		rq.Year = uint32(yearUint)
+	} else {
+		rq.Prefix = year
 	}
 
-	return prefix, year, http.StatusOK, nil
+	return &rq, http.StatusOK, nil
 }
 
 func marshalResponse(response *Response) ([]byte, error) {

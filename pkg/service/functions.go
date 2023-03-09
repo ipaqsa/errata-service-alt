@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func (service *ServiceT) GenerateErrata(prefix, year string) (*db.Errata, int, error) {
+func (service *ServiceT) GenerateErrata(prefix string, year uint32) (*db.Errata, int, error) {
 	status := service.db.CheckConnect()
 	if !status {
 		time.Sleep(time.Second)
