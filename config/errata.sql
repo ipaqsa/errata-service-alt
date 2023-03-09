@@ -5,7 +5,7 @@ create table if not exists ErrataID
     errata_year          UInt32,
     errata_num           UInt32,
     errata_update_count  UInt32,
-    errate_creation_date DateTime,
+    errata_creation_date DateTime,
     errata_change_date   DateTime
-) engine = MergeTree ORDER BY errata_prefix
+) engine = MergeTree ORDER BY (errata_prefix, errata_year)
         SETTINGS index_granularity = 2;
