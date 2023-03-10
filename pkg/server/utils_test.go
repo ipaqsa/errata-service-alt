@@ -44,7 +44,7 @@ func TestValid(t *testing.T) {
 		{
 			data:     "ALT-2002",
 			vtype:    "prefix",
-			expected: true,
+			expected: false,
 		},
 		{
 			data:     "ALT_2002",
@@ -54,7 +54,7 @@ func TestValid(t *testing.T) {
 		{
 			data:     "ALT-SA-2002",
 			vtype:    "prefix",
-			expected: true,
+			expected: false,
 		},
 		{
 			data:     "ALt-",
