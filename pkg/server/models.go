@@ -10,8 +10,3 @@ type ResponseErrata struct {
 	Created string `json:"created"`
 	Updated string `json:"updated"`
 }
-
-type RegisterQuery struct {
-	Year   uint32
-	Prefix string
-}

@@ -14,78 +14,47 @@ import (
 )
 
 func valid(data string, vtype string) (string, bool) {
+	data = strings.TrimSpace(data)
+	if data == "" {
+		return "", false
+	}
 	if vtype == "prefix" {
-		matched, _ := regexp.MatchString("^[A-Z]+[\\-0-9A-Z]+$", data)
+		matched, _ := regexp.MatchString("[A-Z]+-[A-Z]+$", data)
 		return data, matched
 	} else if vtype == "name" {
-		matched, _ := regexp.MatchString("^[A-Z]+[\\-0-9A-Z]+-[\\d]{4,}-[\\d]{1,}$", data)
+		matched, _ := regexp.MatchString("^[A-Z]+-[A-Z]+-2[\\d]{3}-[\\d]{4,}-[\\d]{1,4}$", data)
 		return data, matched
 	} else if vtype == "year" {
-		matched, _ := regexp.MatchString("^[2][0-9]{3}$", data)
+		matched, _ := regexp.MatchString("^2[0-9]{3}$", data)
 		return data, matched
 	}
 	return "", false
 }
 
 func parseQuery(r *http.Request) (string, int, error) {
-	q := r.URL.RawQuery
-	splits := strings.Split(q, "=")
-	if len(splits) != 2 {
-		return "", http.StatusBadRequest, errors.New("wrong format")
-	}
-	data, status := valid(splits[1], splits[0])
+	q := r.URL.Query()
+	name, status := valid(q.Get("name"), "name")
 	if !status {
-		return "", http.StatusBadRequest, errors.New("wrong format")
+		return "", http.StatusBadRequest, errors.New("wrong name format")
 	}
-	return data, http.StatusOK, nil
+	return name, http.StatusOK, nil
 }
 
-func parseRegisterQuery(r *http.Request) (*RegisterQuery, int, error) {
-	q := r.URL.RawQuery
-	splits := strings.Split(q, "&")
-	if len(splits) != 2 {
-		errorLogger.Printf("request invalid")
-		return nil, http.StatusBadRequest, errors.New("wrong format")
-	}
-	var rq RegisterQuery
-	prefixSplits := strings.Split(splits[0], "=")
-	if len(prefixSplits) != 2 {
-		errorLogger.Printf("request invalid")
-		return nil, http.StatusBadRequest, errors.New("wrong format")
-	}
-	prefix, status := valid(prefixSplits[1], prefixSplits[0])
+func parseRegisterQuery(r *http.Request) (string, uint32, int, error) {
+	qp := r.URL.Query()
+	prefix, status := valid(qp.Get("prefix"), "prefix")
 	if !status {
-		errorLogger.Printf("%s invalid", prefixSplits[0])
-		return nil, http.StatusBadRequest, errors.New("wrong format")
+		return "", 0, http.StatusBadRequest, errors.New("wrong prefix format")
 	}
-	if prefixSplits[0] == "prefix" {
-		rq.Prefix = prefix
-	} else {
-		yearUint, err := strconv.ParseUint(prefix, 10, 32)
-		if err != nil {
-			errorLogger.Printf("year parse error")
-			return nil, http.StatusBadRequest, errors.New("wrong format")
-		}
-		rq.Year = uint32(yearUint)
-	}
-	yearSplits := strings.Split(splits[1], "=")
-	year, status := valid(yearSplits[1], yearSplits[0])
+	year, status := valid(qp.Get("year"), "year")
 	if !status {
-		errorLogger.Printf("%s invalid", yearSplits[0])
-		return nil, http.StatusBadRequest, errors.New("wrong format")
+		return "", 0, http.StatusBadRequest, errors.New("wrong year format")
 	}
-	if yearSplits[0] == "year" {
-		yearUint, err := strconv.ParseUint(year, 10, 32)
-		if err != nil {
-			errorLogger.Printf("year parse error")
-			return nil, http.StatusBadRequest, errors.New("wrong format")
-		}
-		rq.Year = uint32(yearUint)
-	} else {
-		rq.Prefix = year
+	parseUint, err := strconv.ParseUint(year, 10, 32)
+	if err != nil {
+		return "", 0, http.StatusBadRequest, errors.New("wrong year format")
 	}
-
-	return &rq, http.StatusOK, nil
+	return prefix, uint32(parseUint), http.StatusOK, nil
 }
 
 func marshalResponse(response *Response) ([]byte, error) {
