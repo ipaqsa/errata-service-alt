@@ -1,0 +1,11 @@
+version: "3.7"
+
+services:
+  service-test:
+    container_name: errata-service-test
+    environment:
+      - TZ=Europe/Moscow
+    build:
+      context: .
+      dockerfile: Dockerfile-tests
+    command: ["go", "test", "-v", "-cover", "./..."]
