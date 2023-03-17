@@ -1,5 +1,8 @@
 package configurator
 
+const defaultName = "ErrataID"
+const defaultPort = 9111
+
 type ConfigT struct {
 	DataBase       string   `yaml:"database"`
 	Login          string   `yaml:"login"`

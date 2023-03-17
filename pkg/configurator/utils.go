@@ -2,10 +2,11 @@ package configurator
 
 import (
 	"errors"
-	"gopkg.in/yaml.v3"
 	"io/ioutil"
 	"net"
 	"strings"
+
+	"gopkg.in/yaml.v3"
 )
 
 func pathToConfIsValid(path string) error {
@@ -32,6 +33,12 @@ func parseConfig(path string) (*ConfigT, error) {
 	}
 	if config.DialTimeout < 1 {
 		config.DialTimeout = 5
+	}
+	if config.Name == "" {
+		config.Name = defaultName
+	}
+	if config.Port == 0 {
+		config.Port = defaultPort
 	}
 	return &config, nil
 }
