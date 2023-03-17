@@ -4,6 +4,7 @@ import (
 	"errataService/pkg/configurator"
 	"errataService/pkg/logger"
 	"errataService/pkg/service"
+	"fmt"
 	"net/http"
 )
 
@@ -20,9 +21,11 @@ func Run() error {
 	http.HandleFunc("/register", registerHandler)
 	http.HandleFunc("/update", updateHandler)
 	http.HandleFunc("/check", checkHandler)
+	http.HandleFunc("/version", versionHandler)
 
-	infoLogger.Printf("Service start at %s", configurator.Port)
-	err = http.ListenAndServe(configurator.Port, nil)
+	infoLogger.Printf("Service '%s' started at %d", configurator.Config.Name, configurator.Config.Port)
+	addr := fmt.Sprintf(":%d", configurator.Config.Port)
+	err = http.ListenAndServe(addr, nil)
 	if err != nil {
 		return err
 	}
