@@ -1,3 +1,5 @@
+name: ErrataID
+port: 9111
 database: "default"
 login: "default"
 password: ""
