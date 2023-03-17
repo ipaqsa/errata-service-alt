@@ -6,13 +6,15 @@ import (
 	"os"
 )
 
+var version = ""
+
 func init() {
 	err := configurator.FlagInit()
 	if err != nil {
 		println(err.Error())
 		os.Exit(-1)
 	}
-	configurator.SetVersion("1.0.5")
+	configurator.SetVersion(version)
 	configurator.InitInfo()
 	configurator.PrintInfo()
 }

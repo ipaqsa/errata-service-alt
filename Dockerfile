@@ -5,6 +5,6 @@ RUN apt-get update && apt-get install -y golang && rm -f /var/cache/apt/archives
 WORKDIR /service
 COPY . .
 RUN touch ./config.yml
-RUN go build -mod vendor -o service ./cmd/main.go
+RUN go build -mod vendor -o service -ldflags "-X main.version=$(git tag --sort=-version:refname | head -n 1)" ./cmd/main.go
 
 ENTRYPOINT ["./service", "-c", "./config.yml"]
