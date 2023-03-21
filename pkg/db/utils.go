@@ -26,7 +26,7 @@ func ErrataToString(errata *Errata) string {
 }
 
 func PrintErrata(errata *Errata) {
-	fmt.Printf("Errata #%s %s-%s-%d-%d Created: %s Last Change: %s\n", errata.id, errata.Prefix, errata.Year, errata.Num, errata.UpdateCount, errata.CreationDate, errata.ChangeDate)
+	fmt.Printf("Errata #%s %s-%d-%d-%d Created: %s Last Change: %s\n", errata.id, errata.Prefix, errata.Year, errata.Num, errata.UpdateCount, errata.CreationDate, errata.ChangeDate)
 }
 
 func ErrataToID(errata string) (string, uint32, error) {
