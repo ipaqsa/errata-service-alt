@@ -1,6 +1,7 @@
-name: ErrataID
+name: "ErrataID"
 port: 9111
 database: "default"
+table_name: "ErrataID"
 login: "default"
 password: ""
 clickhouse_address: "clickhouse:9000"
