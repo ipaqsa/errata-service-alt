@@ -40,6 +40,9 @@ func parseConfig(path string) (*ConfigT, error) {
 	if config.Port == 0 {
 		config.Port = defaultPort
 	}
+	if config.TableName == "" {
+		config.TableName = defaultTableName
+	}
 	return &config, nil
 }
 
